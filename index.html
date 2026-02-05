@@ -29,6 +29,10 @@
       text-decoration: none;
     }
 
+    a:hover {
+      text-decoration: underline;
+    }
+
     #enter {
       position: fixed;
       inset: 0;
@@ -82,7 +86,7 @@
 
     /* player */
     .player {
-      margin: 30px 0;
+      margin: 30px 0 40px;
     }
 
     .cover {
@@ -111,7 +115,6 @@
     .controls {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 15px;
       margin-bottom: 10px;
     }
@@ -129,13 +132,34 @@
       height: 6px;
       background: #222;
       cursor: pointer;
-      margin-top: 10px;
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
       background: #fff;
+    }
+
+    /* links */
+    .section {
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    .section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .links a {
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .links a:last-child {
+      border-bottom: none;
     }
   </style>
 </head>
@@ -162,14 +186,33 @@
         </div>
 
         <div class="song">tempo</div>
-        <div class="artist">supxr</div>
+        <div class="artist">str spacey</div>
 
         <div class="controls">
-          <button class="btn" id="playPause">play</button>
+          <button class="btn" id="playPause">pause</button>
         </div>
 
         <div class="progress" id="progress">
           <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>my projects</h2>
+        <div class="links">
+          <a href="https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit?usp=sharing" target="_blank">
+            ultimate games stash
+          </a>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>socials</h2>
+        <div class="links">
+          <a href="https://youtube.com/@spaceshipvibers" target="_blank">youtube</a>
+          <a href="https://discord.com/users/1389074964514082936" target="_blank">discord</a>
+          <a href="mailto:jaydenblex909@gmail.com">email</a>
+          <a href="https://tiktok.com/@luh_a500" target="_blank">tiktok</a>
         </div>
       </div>
 
@@ -184,7 +227,6 @@
 
     document.getElementById("enter").onclick = () => {
       music.play();
-      playPause.textContent = "pause";
       setTimeout(() => {
         document.getElementById("enter").style.display = "none";
         document.getElementById("main").style.display = "block";
@@ -209,8 +251,7 @@
 
     progress.onclick = (e) => {
       const width = progress.clientWidth;
-      const clickX = e.offsetX;
-      music.currentTime = (clickX / width) * music.duration;
+      music.currentTime = (e.offsetX / width) * music.duration;
     };
 
     const text = "str spacey";
@@ -233,4 +274,3 @@
 
 </body>
 </html>
-
