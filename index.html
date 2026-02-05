@@ -1,67 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>str spacey</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: 'Quicksand', sans-serif;
       font-weight: 700;
       text-transform: lowercase;
     }
 
     body {
-      background: #ffffff;
-      color: #000000;
+      background: #000;
+      color: #fff;
       height: 100vh;
       overflow: hidden;
     }
 
     a {
-      color: #000;
+      color: #fff;
       text-decoration: none;
     }
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* enter screen */
     #enter {
       position: fixed;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
+      background: #000;
       cursor: pointer;
       z-index: 10;
     }
 
-    #enterText {
-      font-size: 1.2rem;
-      letter-spacing: 1px;
-    }
-
-    /* main */
     #main {
       display: none;
+      padding: 60px 20px;
       height: 100vh;
       overflow-y: auto;
-      padding: 60px 20px;
-      animation: fadeIn 1s ease forwards;
+      animation: fade 1s ease forwards;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes fade {
+      from { opacity: 0 }
+      to { opacity: 1 }
     }
 
     .container {
@@ -81,7 +70,7 @@
       height: 160px;
       margin: 0 auto 30px;
       border-radius: 50%;
-      border: 3px solid #000;
+      border: 2px solid #fff;
       overflow: hidden;
     }
 
@@ -91,63 +80,96 @@
       object-fit: cover;
     }
 
-    .section {
-      margin-top: 35px;
-      text-align: left;
+    /* player */
+    .player {
+      margin: 30px 0;
     }
 
-    .section h2 {
-      font-size: 1.2rem;
-      margin-bottom: 12px;
+    .cover {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 10px;
+      border: 2px solid #fff;
     }
 
-    .links a {
-      display: block;
-      padding: 10px 0;
-      border-bottom: 1px solid #e5e5e5;
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .links a:last-child {
-      border-bottom: none;
+    .song {
+      font-size: 1rem;
+    }
+
+    .artist {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      border: 2px solid #fff;
+      background: none;
+      color: #fff;
+      padding: 6px 14px;
+      cursor: pointer;
+    }
+
+    .progress {
+      width: 100%;
+      height: 6px;
+      background: #222;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #fff;
     }
   </style>
 </head>
 <body>
 
-  <!-- audio -->
-  <audio id="bgMusic" src="TEMPO.mp3" loop></audio>
+  <audio id="music" src="TEMPO.mp3"></audio>
 
-  <!-- enter -->
   <div id="enter">
-    <div id="enterText"></div>
+    <div>click to enter</div>
   </div>
 
-  <!-- main -->
   <div id="main">
     <div class="container">
 
       <div id="title"></div>
 
       <div class="pfp">
-        <img src="pfp.png" alt="profile picture">
+        <img src="pfp.png" alt="profile">
       </div>
 
-      <div class="section">
-        <h2>my projects</h2>
-        <div class="links">
-          <a href="https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit?usp=sharing" target="_blank">
-            ultimate games stash
-          </a>
+      <div class="player">
+        <div class="cover">
+          <img src="cover.png" alt="cover">
         </div>
-      </div>
 
-      <div class="section">
-        <h2>socials</h2>
-        <div class="links">
-          <a href="https://youtube.com/@spaceshipvibers" target="_blank">youtube</a>
-          <a href="https://discord.com/users/1389074964514082936" target="_blank">discord</a>
-          <a href="mailto:jaydenblex909@gmail.com">email</a>
-          <a href="https://tiktok.com/@luh_a500" target="_blank">tiktok</a>
+        <div class="song">tempo</div>
+        <div class="artist">str spacey</div>
+
+        <div class="controls">
+          <button class="btn" id="playPause">play</button>
+        </div>
+
+        <div class="progress" id="progress">
+          <div class="progress-bar" id="progressBar"></div>
         </div>
       </div>
 
@@ -155,53 +177,55 @@
   </div>
 
   <script>
-    /* enter typewriter */
-    const enterMessage = "click to enter...";
-    const enterEl = document.getElementById("enterText");
-    let ei = 0;
+    const music = document.getElementById("music");
+    const playPause = document.getElementById("playPause");
+    const progress = document.getElementById("progress");
+    const progressBar = document.getElementById("progressBar");
 
-    function typeEnter() {
-      if (ei < enterMessage.length) {
-        enterEl.textContent += enterMessage.charAt(ei);
-        ei++;
-        setTimeout(typeEnter, 60);
-      }
-    }
-    typeEnter();
-
-    const music = document.getElementById("bgMusic");
-
-    document.getElementById("enter").addEventListener("click", () => {
+    document.getElementById("enter").onclick = () => {
       music.play();
-
-      // lock interaction
-      document.getElementById("enter").style.pointerEvents = "none";
-
-      // wait 2 seconds before showing profile
+      playPause.textContent = "pause";
       setTimeout(() => {
         document.getElementById("enter").style.display = "none";
         document.getElementById("main").style.display = "block";
-        startTitleLoop();
+        startTitle();
       }, 2000);
+    };
+
+    playPause.onclick = () => {
+      if (music.paused) {
+        music.play();
+        playPause.textContent = "pause";
+      } else {
+        music.pause();
+        playPause.textContent = "play";
+      }
+    };
+
+    music.addEventListener("timeupdate", () => {
+      const percent = (music.currentTime / music.duration) * 100;
+      progressBar.style.width = percent + "%";
     });
 
-    /* looping title */
-    const titleText = "str spacey";
-    const titleEl = document.getElementById("title");
-    let ti = 0;
-    let deleting = false;
+    progress.onclick = (e) => {
+      const width = progress.clientWidth;
+      const clickX = e.offsetX;
+      music.currentTime = (clickX / width) * music.duration;
+    };
 
-    function startTitleLoop() {
+    const text = "str spacey";
+    const title = document.getElementById("title");
+    let i = 0;
+    let del = false;
+
+    function startTitle() {
       setInterval(() => {
-        if (!deleting) {
-          titleEl.textContent = titleText.slice(0, ti++);
-          if (ti > titleText.length + 10) deleting = true;
+        if (!del) {
+          title.textContent = text.slice(0, i++);
+          if (i > text.length + 8) del = true;
         } else {
-          titleEl.textContent = titleText.slice(0, ti--);
-          if (ti < 0) {
-            deleting = false;
-            ti = 0;
-          }
+          title.textContent = text.slice(0, i--);
+          if (i < 0) { del = false; i = 0; }
         }
       }, 120);
     }
