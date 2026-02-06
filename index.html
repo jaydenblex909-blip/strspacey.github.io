@@ -30,7 +30,7 @@
     }
 
     a:hover {
-      text-decoration: underline;
+      text-shadow: 0 0 6px rgba(255,255,255,0.4);
     }
 
     #enter {
@@ -65,14 +65,14 @@
 
     #title {
       font-size: 2.4rem;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
       min-height: 2.8rem;
     }
 
     .pfp {
       width: 160px;
       height: 160px;
-      margin: 0 auto 30px;
+      margin: 0 auto 28px;
       border-radius: 50%;
       border: 2px solid #fff;
       overflow: hidden;
@@ -86,14 +86,24 @@
 
     /* player */
     .player {
-      margin: 30px 0 40px;
+      margin: 30px 0 42px;
     }
 
     .cover {
       width: 120px;
       height: 120px;
-      margin: 0 auto 10px;
+      margin: 0 auto 12px;
       border: 2px solid #fff;
+      overflow: hidden;
+    }
+
+    .cover.spin img {
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .cover img {
@@ -113,18 +123,26 @@
     }
 
     .controls {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .btn {
       border: 2px solid #fff;
       background: none;
       color: #fff;
-      padding: 6px 14px;
+      padding: 6px 16px;
       cursor: pointer;
+      transition: box-shadow .2s ease;
+    }
+
+    .btn:hover {
+      box-shadow: 0 0 8px rgba(255,255,255,.4);
+    }
+
+    .time {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-bottom: 6px;
     }
 
     .progress {
@@ -132,12 +150,17 @@
       height: 6px;
       background: #222;
       cursor: pointer;
+      margin-bottom: 10px;
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
       background: #fff;
+    }
+
+    .volume {
+      width: 100%;
     }
 
     /* links */
@@ -149,17 +172,13 @@
     .section h2 {
       font-size: 1.1rem;
       margin-bottom: 12px;
-      opacity: 0.8;
+      opacity: 0.75;
     }
 
     .links a {
       display: block;
       padding: 10px 0;
       border-bottom: 1px solid #222;
-    }
-
-    .links a:last-child {
-      border-bottom: none;
     }
   </style>
 </head>
@@ -181,20 +200,26 @@
       </div>
 
       <div class="player">
-        <div class="cover">
+        <div class="cover" id="cover">
           <img src="cover.png" alt="cover">
         </div>
 
         <div class="song">tempo</div>
-        <div class="artist">supxr</div>
+        <div class="artist">str spacey</div>
 
         <div class="controls">
           <button class="btn" id="playPause">pause</button>
         </div>
 
+        <div class="time">
+          <span id="current">0:00</span> / <span id="duration">0:00</span>
+        </div>
+
         <div class="progress" id="progress">
           <div class="progress-bar" id="progressBar"></div>
         </div>
+
+        <input class="volume" id="volume" type="range" min="0" max="1" step="0.01">
       </div>
 
       <div class="section">
@@ -224,9 +249,18 @@
     const playPause = document.getElementById("playPause");
     const progress = document.getElementById("progress");
     const progressBar = document.getElementById("progressBar");
+    const current = document.getElementById("current");
+    const duration = document.getElementById("duration");
+    const volume = document.getElementById("volume");
+    const cover = document.getElementById("cover");
+
+    // restore saved state
+    volume.value = localStorage.volume ?? 1;
+    music.volume = volume.value;
 
     document.getElementById("enter").onclick = () => {
       music.play();
+      cover.classList.add("spin");
       setTimeout(() => {
         document.getElementById("enter").style.display = "none";
         document.getElementById("main").style.display = "block";
@@ -238,26 +272,49 @@
       if (music.paused) {
         music.play();
         playPause.textContent = "pause";
+        cover.classList.add("spin");
       } else {
         music.pause();
         playPause.textContent = "play";
+        cover.classList.remove("spin");
       }
     };
 
-    music.addEventListener("timeupdate", () => {
-      const percent = (music.currentTime / music.duration) * 100;
-      progressBar.style.width = percent + "%";
+    music.addEventListener("loadedmetadata", () => {
+      duration.textContent = format(music.duration);
     });
 
-    progress.onclick = (e) => {
-      const width = progress.clientWidth;
-      music.currentTime = (e.offsetX / width) * music.duration;
+    music.addEventListener("timeupdate", () => {
+      progressBar.style.width = (music.currentTime / music.duration) * 100 + "%";
+      current.textContent = format(music.currentTime);
+    });
+
+    progress.onclick = e => {
+      music.currentTime = (e.offsetX / progress.clientWidth) * music.duration;
     };
+
+    volume.oninput = () => {
+      music.volume = volume.value;
+      localStorage.volume = volume.value;
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && !music.paused) {
+        music.pause();
+        playPause.textContent = "play";
+        cover.classList.remove("spin");
+      }
+    });
+
+    function format(t) {
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t % 60).toString().padStart(2,"0");
+      return `${m}:${s}`;
+    }
 
     const text = "str spacey";
     const title = document.getElementById("title");
-    let i = 0;
-    let del = false;
+    let i = 0, del = false;
 
     function startTitle() {
       setInterval(() => {
@@ -274,4 +331,3 @@
 
 </body>
 </html>
-
