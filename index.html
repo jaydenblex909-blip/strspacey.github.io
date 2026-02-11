@@ -1,204 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>str spacey</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="favicon.png">
+<meta charset="utf-8">
+<title>str spacey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="favicon.png">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, sans-serif;
-      color: #fff;
-    }
+<!-- quicksand -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #0a2a18, #020403 70%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  font-family:'Quicksand',sans-serif;
+  color:#fff;
+}
 
-    .card {
-      width: 900px;
-      max-width: 95%;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(20px);
-      border-radius: 28px;
-      padding: 40px;
-      transition: all .4s ease;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#0a2a18,#020403 70%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
 
-    .view {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity .4s ease, transform .4s ease;
-    }
+/* click to enter */
+#enter{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+  cursor:pointer;
+  transition:opacity .6s ease;
+}
+#enter.hidden{opacity:0;pointer-events:none;}
 
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
-    }
+.card{
+  width:380px;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(18px);
+  border-radius:22px;
+  padding:26px;
+}
 
-    h1 {
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
+.view{
+  transition:opacity .35s ease,transform .35s ease;
+}
+.hidden{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+}
 
-    h2 {
-      margin-top: 28px;
-      font-size: 18px;
-      opacity: .9;
-    }
+h1{
+  font-size:20px;
+  margin:0 0 14px;
+}
+h2{
+  font-size:14px;
+  margin:18px 0 8px;
+  opacity:.85;
+}
+p{
+  font-size:12.5px;
+  line-height:1.6;
+  opacity:.85;
+}
 
-    p {
-      font-size: 14px;
-      line-height: 1.6;
-      opacity: .85;
-    }
+button{
+  background:transparent;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;
+  padding:8px 14px;
+  font-size:12px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+button:hover{
+  background:#000;
+  border-color:#000;
+}
 
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
+.links{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
 
-    .btn {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,.2);
-      cursor: pointer;
-      transition: .2s ease;
-    }
+.back{
+  font-size:12px;
+  opacity:.7;
+  cursor:pointer;
+  margin-bottom:10px;
+}
+.back:hover{opacity:1;}
 
-    .btn:hover {
-      background: #000;
-      border-color: #000;
-    }
+.fade-black{
+  position:absolute;
+  inset:0;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+  z-index:3;
+}
+.fade-black.active{opacity:1;}
 
-    .projects, .socials {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .link {
-      font-size: 14px;
-      opacity: .85;
-      text-decoration: none;
-    }
-
-    .link:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    .back {
-      font-size: 14px;
-      opacity: .7;
-      cursor: pointer;
-      margin-bottom: 16px;
-      display: inline-block;
-    }
-
-    .back:hover {
-      opacity: 1;
-    }
-
-    .image-preview {
-      width: 100%;
-      margin: 24px 0;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .image-preview img {
-      width: 100%;
-      display: block;
-    }
-
-    @media (max-width: 700px) {
-      .card {
-        padding: 24px;
-      }
-    }
-  </style>
+.player{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.cover{
+  width:38px;
+  height:38px;
+  border-radius:8px;
+  background:#222;
+}
+.song{
+  font-size:12px;
+  opacity:.85;
+}
+</style>
 </head>
+
 <body>
 
-<div class="card">
+<!-- click to enter -->
+<div id="enter">
+  <div>click to enter</div>
+</div>
 
-  <!-- HOME VIEW -->
+<div class="card">
+  <div class="fade-black" id="fade"></div>
+
+  <!-- HOME -->
   <div class="view" id="home">
-    <div class="top">
-      <h1>hi, i’m spacey</h1>
+    <h1>hi, i’m spacey</h1>
+
+    <h2>currently playing</h2>
+    <div class="player">
+      <div class="cover"></div>
+      <div class="song">TEMPO - SUPXR</div>
     </div>
 
     <h2>projects</h2>
-    <div class="projects">
-      <button class="btn" onclick="openProject()">ultimate games stash</button>
+    <div class="links">
+      <button onclick="openProject()">ultimate games stash</button>
     </div>
 
     <h2>socials</h2>
-    <div class="socials">
-      <a class="link" href="https://youtube.com/@spaceshipvibers" target="_blank">youtube</a>
-      <a class="link" href="https://tiktok.com/@luh_a500" target="_blank">tiktok</a>
-      <a class="link" href="https://discord.com/users/1389074964514082936" target="_blank">discord</a>
-      <a class="link" href="mailto:jaydenblex909@gmail.com">email</a>
+    <div class="links">
+      <a href="https://youtube.com/@spaceshipvibers">youtube</a>
+      <a href="https://tiktok.com/@luh_a500">tiktok</a>
+      <a href="https://discord.com/users/1389074964514082936">discord</a>
     </div>
   </div>
 
-  <!-- PROJECT VIEW -->
+  <!-- PROJECT -->
   <div class="view hidden" id="project">
     <div class="back" onclick="goHome()">← back</div>
-
     <h1>ultimate games stash</h1>
-
     <p>
-      ultimate games stash is a hybrid games and tools project built to work
-      across a wide range of filters. it focuses on speed, reliability, and a
-      clean ui while hosting a large collection of popular apps and games.
+      a curated collection of games and tools designed to work across
+      multiple filters. focused on speed, reliability, and clean design.
     </p>
-
-    <div class="image-preview">
-      <img src="project-preview.png" alt="project preview">
-    </div>
-
-    <p>
-      the project has gone through multiple major changes and continues
-      to evolve with new features, and improvements over time.
-    </p>
-
-    <button class="btn"
-      onclick="window.open('https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit','_blank')">
+    <button onclick="window.open('https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit')">
       visit project →
     </button>
   </div>
-
 </div>
 
+<audio id="music" src="TEMPO.mp3" loop></audio>
+
 <script>
-  const home = document.getElementById('home');
-  const project = document.getElementById('project');
+const enter = document.getElementById('enter');
+const music = document.getElementById('music');
+const home = document.getElementById('home');
+const project = document.getElementById('project');
+const fade = document.getElementById('fade');
 
-  function openProject() {
+enter.onclick = () => {
+  enter.classList.add('hidden');
+  music.play().catch(()=>{});
+};
+
+function openProject(){
+  fade.classList.add('active');
+  setTimeout(()=>{
     home.classList.add('hidden');
-    setTimeout(() => project.classList.remove('hidden'), 200);
-  }
+    project.classList.remove('hidden');
+    fade.classList.remove('active');
+  },300);
+}
 
-  function goHome() {
+function goHome(){
+  fade.classList.add('active');
+  setTimeout(()=>{
     project.classList.add('hidden');
-    setTimeout(() => home.classList.remove('hidden'), 200);
-  }
+    home.classList.remove('hidden');
+    fade.classList.remove('active');
+  },300);
+}
 </script>
 
 </body>
