@@ -163,18 +163,31 @@ button:hover{
   </div>
 
   <!-- PROJECT -->
-  <div class="view hidden" id="project-preview.png">
-    <div class="back" onclick="goHome()">← back</div>
-    <h1>ultimate games stash</h1>
-    <p>
-      a curated collection of games and tools designed to work across
-      multiple filters. focused on speed, reliability, and clean design.
-    </p>
-    <button onclick="window.open('https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit')">
-      visit project →
-    </button>
-  </div>
+ <div class="view hidden" id="project">
+  <div class="back" onclick="goHome()">← back</div>
+
+  <h1>ultimate games stash</h1>
+
+  <img src="project-preview.png"
+       alt="project preview"
+       style="
+         width:100%;
+         border-radius:14px;
+         margin:14px 0;
+         display:block;
+       ">
+
+  <p>
+    ultimate games stash is 
+    a curated collection of games and tools designed to work across
+    multiple filters. focused on speed and clean ui. 
+  </p>
+
+  <button onclick="window.open('https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit')">
+    visit site →
+  </button>
 </div>
+
 
 <audio id="music" src="TEMPO.mp3" loop></audio>
 
@@ -211,4 +224,5 @@ function goHome(){
 
 </body>
 </html>
+
 
