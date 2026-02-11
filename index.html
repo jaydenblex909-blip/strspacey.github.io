@@ -1,291 +1,202 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>str spacey</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.png" />
 
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 700;
-      text-transform: lowercase;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background:
-        radial-gradient(circle at top, rgba(0,255,150,.15), transparent 40%),
-        linear-gradient(#050505, #000);
-      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      background: radial-gradient(circle at top, #0f1a14, #000);
+      color: white;
       height: 100vh;
       overflow: hidden;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a { color: #7aa2ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
     /* click to enter */
     #enter {
       position: fixed;
       inset: 0;
-      background: #000;
+      background: black;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 100;
-      font-size: 1.3rem;
+      z-index: 10;
+      font-size: 22px;
+      letter-spacing: 2px;
     }
 
-    /* layout */
-    #app {
-      display: none;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    header {
-      padding: 60px 20px 40px;
-      text-align: center;
-    }
-
-    header h1 {
-      font-size: 2.8rem;
-      margin-bottom: 18px;
-    }
-
-    .pill-row {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      border: 1.5px solid rgba(255,255,255,.4);
-      padding: 10px 22px;
-      border-radius: 999px;
-      transition: .2s;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-
-    .pill:hover {
-      background: #000;
-      border-color: #fff;
-    }
-
-    .stat {
-      margin-top: 40px;
-      padding: 20px;
-      background: rgba(0,0,0,.45);
-      backdrop-filter: blur(8px);
-      border-radius: 16px;
-      text-align: center;
-    }
-
-    .stat h2 {
-      font-size: 1.2rem;
-      opacity: .85;
-    }
-
-    section {
-      max-width: 900px;
-      margin: 60px auto;
-      padding: 0 20px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: .6s;
-      pointer-events: none;
-    }
-
-    section.active {
-      opacity: 1;
-      transform: none;
-      pointer-events: auto;
-    }
-
+    /* main card */
     .card {
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.15);
+      width: 420px;
+      max-width: 90%;
+      background: rgba(0,0,0,0.6);
       border-radius: 18px;
-      padding: 30px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(10px);
+      padding: 24px;
+      margin: auto;
+      margin-top: 10vh;
+      backdrop-filter: blur(16px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .back {
-      opacity: .6;
+    .profile img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid white;
+      margin: 10px 0;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .projects button {
+      background: transparent;
+      border: 1px solid #444;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 999px;
       cursor: pointer;
-      margin-bottom: 20px;
-      display: inline-block;
+      margin: 4px 0;
     }
 
-    .back:hover { opacity: 1; }
+    .projects button:hover {
+      background: #111;
+    }
+
+    .socials a {
+      display: block;
+      margin: 4px 0;
+      font-size: 14px;
+    }
 
     /* player */
     .player {
-      max-width: 420px;
-      margin: 30px auto;
-      text-align: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .cover {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 12px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.3);
-    }
-
-    .spin img {
-      animation: spin 4s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .player img {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
     }
 
     .progress {
-      height: 6px;
-      background: #222;
-      margin-top: 10px;
+      flex: 1;
+      height: 4px;
+      background: #333;
       cursor: pointer;
     }
 
-    .bar {
+    .progress span {
+      display: block;
       height: 100%;
       width: 0%;
-      background: #fff;
+      background: white;
+    }
+
+    .controls {
+      cursor: pointer;
+      font-size: 18px;
+      user-select: none;
     }
   </style>
 </head>
-<body>
 
-<audio id="music" src="TEMPO.mp3"></audio>
+<body>
 
 <div id="enter">click to enter</div>
 
-<div id="app">
-
-  <!-- hero -->
-  <header>
-    <h1>hi im spacey</h1>
-
-    <div class="pill-row">
-      <div class="pill" onclick="show('home')">home</div>
-      <div class="pill" onclick="show('projects')">projects</div>
-      <div class="pill" onclick="show('socials')">socials</div>
+<div class="card">
+  <div class="profile">
+    <h1>hi, i'm str spacey.</h1>
+    <img src="pfp.png" alt="profile">
+    <h2>projects</h2>
+    <div class="projects">
+      <button onclick="go('https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit')">
+        ultimate games stash
+      </button>
     </div>
+  </div>
 
-    <div class="stat">
-      <h2>users online: 2682</h2>
+  <div>
+    <h2>currently playing</h2>
+    <img src="cover.png" style="width:60px;border-radius:8px">
+    <p style="margin-top:6px">TEMPO - SUPXR</p>
+
+    <h2 style="margin-top:20px">socials</h2>
+    <div class="socials">
+      <a href="https://youtube.com/@spaceshipvibers">youtube</a>
+      <a href="https://tiktok.com/@luh_a500">tiktok</a>
+      <a href="https://discord.com/users/1389074964514082936">discord</a>
+      <a href="mailto:jaydenblex909@gmail.com">email</a>
     </div>
-  </header>
-
-  <!-- home -->
-  <section id="home" class="active">
-    <div class="card">
-      <h2>currently playing</h2>
-
-      <div class="player">
-        <div class="cover" id="cover">
-          <img src="cover.png">
-        </div>
-
-        <div>tempo — str spacey</div>
-
-        <div class="pill" onclick="toggle()">pause</div>
-
-        <div class="progress" id="progress">
-          <div class="bar" id="bar"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- projects -->
-  <section id="projects">
-    <div class="card">
-      <h2>ultimate game stash</h2>
-      <div class="pill" onclick="show('ugs')">view</div>
-    </div>
-  </section>
-
-  <!-- project detail -->
-  <section id="ugs">
-    <div class="back" onclick="show('projects')">← back</div>
-
-    <div class="card">
-      <p>
-        ultimate games stash is a fully functional google docs for unblocked games, we have over 200+ games for everyone 
-        to play. probably one of the best choices for choosing unblocked gaming websites in school. this has been operating
-        for 1+ year and way better than coolmath or classroom6x!
-      </p>
-      <br>
-      <a class="pill" target="_blank"
-        href="https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit?usp=sharing">
-        visit site
-      </a>
-    </div>
-  </section>
-
-  <!-- socials -->
-  <section id="socials">
-    <div class="card pill-row">
-      <a class="pill" href="https://youtube.com/@spaceshipvibers" target="_blank">youtube</a>
-      <a class="pill" href="https://discord.com/users/1389074964514082936" target="_blank">discord</a>
-      <a class="pill" href="mailto:jaydenblex909@gmail.com">email</a>
-      <a class="pill" href="https://tiktok.com/@luh_a500" target="_blank">tiktok</a>
-    </div>
-  </section>
-
+  </div>
 </div>
 
+<div class="player">
+  <div class="controls" id="play">▶</div>
+  <img src="cover.png">
+  <div class="progress" id="bar"><span></span></div>
+</div>
+
+<audio id="audio" src="TEMPO.mp3"></audio>
+
 <script>
-  const music = document.getElementById("music");
-  const cover = document.getElementById("cover");
-  const bar = document.getElementById("bar");
-  const progress = document.getElementById("progress");
-  const enter = document.getElementById("enter");
-  const app = document.getElementById("app");
-  const sections = document.querySelectorAll("section");
+  const enter = document.getElementById('enter');
+  const audio = document.getElementById('audio');
+  const playBtn = document.getElementById('play');
+  const bar = document.querySelector('.progress span');
 
   enter.onclick = () => {
-    enter.style.display = "none";
-    app.style.display = "block";
-    music.play();
-    cover.classList.add("spin");
+    enter.style.display = 'none';
+    audio.play();
+    playBtn.textContent = '⏸';
   };
 
-  function show(id) {
-    sections.forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-  }
-
-  function toggle() {
-    if (music.paused) {
-      music.play();
-      cover.classList.add("spin");
+  playBtn.onclick = () => {
+    if (audio.paused) {
+      audio.play();
+      playBtn.textContent = '⏸';
     } else {
-      music.pause();
-      cover.classList.remove("spin");
+      audio.pause();
+      playBtn.textContent = '▶';
     }
+  };
+
+  audio.ontimeupdate = () => {
+    bar.style.width = (audio.currentTime / audio.duration) * 100 + '%';
+  };
+
+  function go(url) {
+    window.location.href = url;
   }
-
-  music.ontimeupdate = () => {
-    bar.style.width = (music.currentTime / music.duration) * 100 + "%";
-  };
-
-  progress.onclick = e => {
-    music.currentTime = (e.offsetX / progress.clientWidth) * music.duration;
-  };
 </script>
 
 </body>
