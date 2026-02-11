@@ -19,7 +19,9 @@
     }
 
     body {
-      background: radial-gradient(circle at top, #111, #000 70%);
+      background:
+        radial-gradient(circle at top, rgba(0,255,150,.15), transparent 40%),
+        linear-gradient(#050505, #000);
       color: #fff;
       height: 100vh;
       overflow: hidden;
@@ -36,115 +38,124 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 50;
-      font-size: 1.2rem;
-    }
-
-    /* buttons */
-    .btn {
-      border: 2px solid #fff;
-      padding: 10px 22px;
-      background: transparent;
-      color: #fff;
-      cursor: pointer;
-      transition: all .2s ease;
-    }
-
-    .btn:hover {
-      background: #000;
-      box-shadow: 0 0 10px rgba(255,255,255,.4);
-    }
-
-    #app {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      display: none;
-    }
-
-    .page {
-      position: absolute;
-      max-width: 900px;
-      width: 100%;
-      padding: 40px;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .6s ease;
-    }
-
-    .page.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-    }
-
-    h2 {
+      z-index: 100;
       font-size: 1.3rem;
-      opacity: .8;
-      margin-bottom: 20px;
     }
 
-    .nav {
-      margin-top: 24px;
+    /* layout */
+    #app {
+      display: none;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    header {
+      padding: 60px 20px 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 18px;
+    }
+
+    .pill-row {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
-    .pfp {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      overflow: hidden;
-      margin: 24px auto;
+    .pill {
+      border: 1.5px solid rgba(255,255,255,.4);
+      padding: 10px 22px;
+      border-radius: 999px;
+      transition: .2s;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
     }
 
-    .pfp img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .pill:hover {
+      background: #000;
+      border-color: #fff;
     }
+
+    .stat {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(0,0,0,.45);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .stat h2 {
+      font-size: 1.2rem;
+      opacity: .85;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 0 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: .6s;
+      pointer-events: none;
+    }
+
+    section.active {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+
+    .card {
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 18px;
+      padding: 30px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .back {
+      opacity: .6;
+      cursor: pointer;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .back:hover { opacity: 1; }
 
     /* player */
     .player {
-      margin: 30px auto;
       max-width: 420px;
+      margin: 30px auto;
+      text-align: center;
     }
 
     .cover {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 10px;
-      border: 2px solid #fff;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.3);
     }
 
-    .cover.spin img {
+    .spin img {
       animation: spin 4s linear infinite;
     }
 
     @keyframes spin {
-      from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
-    }
-
-    .cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
 
     .progress {
       height: 6px;
       background: #222;
-      margin: 10px 0;
+      margin-top: 10px;
       cursor: pointer;
     }
 
@@ -152,28 +163,6 @@
       height: 100%;
       width: 0%;
       background: #fff;
-    }
-
-    .card {
-      border: 2px solid #fff;
-      padding: 30px;
-      margin-top: 20px;
-      transition: opacity .5s ease;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .back {
-      margin-bottom: 20px;
-      display: inline-block;
-      opacity: .7;
-      cursor: pointer;
-    }
-
-    .back:hover {
-      opacity: 1;
     }
   </style>
 </head>
@@ -185,118 +174,110 @@
 
 <div id="app">
 
-  <!-- HOME -->
-  <div class="page active" id="home">
+  <!-- hero -->
+  <header>
     <h1>hi im spacey</h1>
-    <h2>currently playing</h2>
 
-    <div class="player">
-      <div class="cover" id="cover">
-        <img src="cover.png">
+    <div class="pill-row">
+      <div class="pill" onclick="show('home')">home</div>
+      <div class="pill" onclick="show('projects')">projects</div>
+      <div class="pill" onclick="show('socials')">socials</div>
+    </div>
+
+    <div class="stat">
+      <h2>users online: 2682</h2>
+    </div>
+  </header>
+
+  <!-- home -->
+  <section id="home" class="active">
+    <div class="card">
+      <h2>currently playing</h2>
+
+      <div class="player">
+        <div class="cover" id="cover">
+          <img src="cover.png">
+        </div>
+
+        <div>tempo — str spacey</div>
+
+        <div class="pill" onclick="toggle()">pause</div>
+
+        <div class="progress" id="progress">
+          <div class="bar" id="bar"></div>
+        </div>
       </div>
-
-      <div>tempo — str spacey</div>
-
-      <button class="btn" id="play">pause</button>
-
-      <div class="progress" id="progress">
-        <div class="bar" id="bar"></div>
-      </div>
     </div>
+  </section>
 
-    <div class="pfp">
-      <img src="pfp.png">
-    </div>
-
-    <div class="nav">
-      <button class="btn" onclick="go('projects')">projects</button>
-      <button class="btn" onclick="go('socials')">socials</button>
-    </div>
-  </div>
-
-  <!-- PROJECTS -->
-  <div class="page" id="projects">
-    <div class="back" onclick="go('home')">← back</div>
-    <h1>projects</h1>
-
-    <div class="card" id="ugsCard">
+  <!-- projects -->
+  <section id="projects">
+    <div class="card">
       <h2>ultimate game stash</h2>
-      <button class="btn" onclick="openUGS()">view</button>
+      <div class="pill" onclick="show('ugs')">view</div>
     </div>
-  </div>
+  </section>
 
-  <!-- PROJECT DETAIL -->
-  <div class="page" id="ugsPage">
-    <div class="back" onclick="go('projects')">← back</div>
-    <h1>ultimate game stash</h1>
+  <!-- project detail -->
+  <section id="ugs">
+    <div class="back" onclick="show('projects')">← back</div>
 
     <div class="card">
       <p>
-        a curated collection of games, resources, and tools built to be fast,
-        clean, and accessible anywhere.
+        ultimate games stash is a fully functional google docs for unblocked games, we have over 200+ games for everyone 
+        to play. probably one of the best choices for choosing unblocked gaming websites in school. this has been operating
+        for 1+ year and way better than coolmath or classroom6x!
       </p>
       <br>
-      <a class="btn" target="_blank"
+      <a class="pill" target="_blank"
         href="https://docs.google.com/document/d/107QCK9Wyrsb9Ufd03fzfKvwERrIoxA21WBP6xIFCQpE/edit?usp=sharing">
-        open project
+        visit site
       </a>
     </div>
-  </div>
+  </section>
 
-  <!-- SOCIALS -->
-  <div class="page" id="socials">
-    <div class="back" onclick="go('home')">← back</div>
-    <h1>socials</h1>
-
-    <div class="nav">
-      <a class="btn" target="_blank" href="https://youtube.com/@spaceshipvibers">youtube</a>
-      <a class="btn" target="_blank" href="https://discord.com/users/1389074964514082936">discord</a>
-      <a class="btn" href="mailto:jaydenblex909@gmail.com">email</a>
-      <a class="btn" target="_blank" href="https://tiktok.com/@luh_a500">tiktok</a>
+  <!-- socials -->
+  <section id="socials">
+    <div class="card pill-row">
+      <a class="pill" href="https://youtube.com/@spaceshipvibers" target="_blank">youtube</a>
+      <a class="pill" href="https://discord.com/users/1389074964514082936" target="_blank">discord</a>
+      <a class="pill" href="mailto:jaydenblex909@gmail.com">email</a>
+      <a class="pill" href="https://tiktok.com/@luh_a500" target="_blank">tiktok</a>
     </div>
-  </div>
+  </section>
 
 </div>
 
 <script>
-  const pages = document.querySelectorAll(".page");
   const music = document.getElementById("music");
-  const play = document.getElementById("play");
+  const cover = document.getElementById("cover");
   const bar = document.getElementById("bar");
   const progress = document.getElementById("progress");
-  const cover = document.getElementById("cover");
   const enter = document.getElementById("enter");
   const app = document.getElementById("app");
-  const ugsCard = document.getElementById("ugsCard");
-
-  function go(id) {
-    pages.forEach(p => p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-  }
-
-  function openUGS() {
-    ugsCard.classList.add("hidden");
-    go("ugsPage");
-  }
+  const sections = document.querySelectorAll("section");
 
   enter.onclick = () => {
     enter.style.display = "none";
-    app.style.display = "flex";
+    app.style.display = "block";
     music.play();
     cover.classList.add("spin");
   };
 
-  play.onclick = () => {
+  function show(id) {
+    sections.forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  function toggle() {
     if (music.paused) {
       music.play();
-      play.textContent = "pause";
       cover.classList.add("spin");
     } else {
       music.pause();
-      play.textContent = "play";
       cover.classList.remove("spin");
     }
-  };
+  }
 
   music.ontimeupdate = () => {
     bar.style.width = (music.currentTime / music.duration) * 100 + "%";
