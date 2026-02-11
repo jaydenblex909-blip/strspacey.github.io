@@ -27,6 +27,19 @@
 
     a { color: inherit; text-decoration: none; }
 
+    /* click to enter */
+    #enter {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      font-size: 1.2rem;
+    }
+
     /* buttons */
     .btn {
       border: 2px solid #fff;
@@ -35,21 +48,19 @@
       color: #fff;
       cursor: pointer;
       transition: all .2s ease;
-      display: inline-block;
     }
 
     .btn:hover {
       background: #000;
-      color: #fff;
       box-shadow: 0 0 10px rgba(255,255,255,.4);
     }
 
-    /* layout */
     #app {
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      display: none;
     }
 
     .page {
@@ -87,7 +98,6 @@
       flex-wrap: wrap;
     }
 
-    /* home */
     .pfp {
       width: 140px;
       height: 140px;
@@ -144,7 +154,6 @@
       background: #fff;
     }
 
-    /* project card */
     .card {
       border: 2px solid #fff;
       padding: 30px;
@@ -152,8 +161,8 @@
       transition: opacity .5s ease;
     }
 
-    .fade-out {
-      opacity: 0;
+    .hidden {
+      display: none;
     }
 
     .back {
@@ -171,6 +180,8 @@
 <body>
 
 <audio id="music" src="TEMPO.mp3"></audio>
+
+<div id="enter">click to enter</div>
 
 <div id="app">
 
@@ -199,7 +210,7 @@
 
     <div class="nav">
       <button class="btn" onclick="go('projects')">projects</button>
-      <button class="btn" onclick="go('socials')">social</button>
+      <button class="btn" onclick="go('socials')">socials</button>
     </div>
   </div>
 
@@ -208,7 +219,7 @@
     <div class="back" onclick="go('home')">← back</div>
     <h1>projects</h1>
 
-    <div class="card" id="ugs">
+    <div class="card" id="ugsCard">
       <h2>ultimate game stash</h2>
       <button class="btn" onclick="openUGS()">view</button>
     </div>
@@ -235,7 +246,7 @@
   <!-- SOCIALS -->
   <div class="page" id="socials">
     <div class="back" onclick="go('home')">← back</div>
-    <h1>social</h1>
+    <h1>socials</h1>
 
     <div class="nav">
       <a class="btn" target="_blank" href="https://youtube.com/@spaceshipvibers">youtube</a>
@@ -254,6 +265,9 @@
   const bar = document.getElementById("bar");
   const progress = document.getElementById("progress");
   const cover = document.getElementById("cover");
+  const enter = document.getElementById("enter");
+  const app = document.getElementById("app");
+  const ugsCard = document.getElementById("ugsCard");
 
   function go(id) {
     pages.forEach(p => p.classList.remove("active"));
@@ -261,9 +275,16 @@
   }
 
   function openUGS() {
-    document.getElementById("ugs").classList.add("fade-out");
-    setTimeout(() => go("ugsPage"), 400);
+    ugsCard.classList.add("hidden");
+    go("ugsPage");
   }
+
+  enter.onclick = () => {
+    enter.style.display = "none";
+    app.style.display = "flex";
+    music.play();
+    cover.classList.add("spin");
+  };
 
   play.onclick = () => {
     if (music.paused) {
@@ -284,9 +305,6 @@
   progress.onclick = e => {
     music.currentTime = (e.offsetX / progress.clientWidth) * music.duration;
   };
-
-  music.play();
-  cover.classList.add("spin");
 </script>
 
 </body>
